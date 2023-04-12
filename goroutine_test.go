@@ -43,4 +43,10 @@ func TestManyGoroutine(t *testing.T){
  * Channel hanya bisa menerima satu jenis data 
  * Channel bisa diambil lebih dari satu goroutine
  * Channel harus di close jika tidak digunakan atau bisa menyebabkan memory leak
+ * 
+ * MEMBUAT CHANNEL
+ * Channel di golang direpresentasikan dengan tipe data chan
+ * Untuk membuat channel kita bisa menggunakan function make()
+ * Saat pembuatan channel kita harus menentukan type data yang bisa dimasukkan kedalam channel tersebut
+ * make(chan TypeData)
  */
