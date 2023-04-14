@@ -1,18 +1,22 @@
 package golang_goroutine
 
-import(
+import (
     "fmt"
     "testing"
     "time"
+    "sync"
 )
 
-func TestRaceCondition(t *testing.T){
+func TestMutex(t *testing.T){
     x := 0
+    var mutex sync.Mutex
 
     for i := 1; i <= 100; i++{
         go func() {
             for j := 1; j <= 100; j++{
+                mutex.Lock()
                 x = x + 1
+                mutex.Unlock()
             }
         }()
     }
@@ -21,13 +25,7 @@ func TestRaceCondition(t *testing.T){
     fmt.Println("Counter = ", x)
 }
 
-/** RACE CONDITION
- * Saat kita menggunakan goroutine, dia tidak hanya berjalan secara concurrent, tapi juga bisa pararel juga
- * karena bisa ada beberapa thread yang berjalan secara pareler
- * hal ini sangat berbahaya ketika kita melakukan manipulasi data variable yang sama oleh beberapa goroutine 
- * secara bersamaan
- * Hal ini bisa menyebabkan masalah yang namanya Race Condition
- * SYNC.MUTEX
+/** SYNC.MUTEX
  * Mutex(Mutual Exclusion) 
  * Untuk mengatasi masalah race condition, di golang terdapat sebuah struct bernama sync.Mutex
  * Mutex bisa digunakan untuk melakukan locking dan unlocking , dimana  ketika  melakukan locking terhadap
