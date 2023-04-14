@@ -4,6 +4,7 @@ import(
     "fmt"
     "testing"
     "time"
+    "strconv"
 )
 
 func TestCreateChannel(t *testing.T){
@@ -73,6 +74,23 @@ func TestBufferedChannel(t *testing.T){
     time.Sleep(2 * time.Second)
 }
 
+func TestRangeChannel(t *testing.T){
+    channel := make(chan string)
+
+    go func() {
+        for i := 0; i < 10; i++{
+            channel <- "Perulangan ke" + strconv.Itoa(i)
+        }
+        close(channel)
+    }()
+
+    for data := range channel {
+        fmt.Println("Menerima data ", data)
+    }
+
+    fmt.Println("Selesai")
+}
+
 
 
 /** MEMBUAT CHANNEL
@@ -107,4 +125,12 @@ func TestBufferedChannel(t *testing.T){
  * dan jika ingin mengirim data ke 6 maka kita harus menunggu sampai ada buffer yang kosong
  * Untuk membuat buffer cukup menambahkannya capacitynya sebagai argumen pada function make
  * make(chan string, 5)
+ * 
+ * RANGE CHANNEL
+ * Terkadang ada kasus dimana sebuah channel dikirim secara terus menerus oleh pengirim 
+ * dan terkadang tidak jelas kapan channel tersebut akan berhenti menerima data
+ * salah satu yang bisa kita lakukan adalah dengan menggunakan perulangan range ketika menerima data 
+ * dari channel
+ * Ketika sebuah channel di close(), maka perulangan tersebut akan berhenti 
+ * ini lebih sederhana dari pada kita melakukan pengecekan secara manual
  */
