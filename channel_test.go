@@ -55,6 +55,24 @@ func TestInOutChannel(t *testing.T){
     time.Sleep(2 * time.Second)
 }
 
+func TestBufferedChannel(t *testing.T){
+    channel := make(chan string, 3)
+    defer close(channel)    
+
+    go func() {
+        channel <- "Luna"
+        channel <- "Andini"
+        channel <- "Rizka"
+    }()
+
+    go func() {
+        fmt.Println(<- channel)
+        fmt.Println(<- channel)
+        fmt.Println(<- channel)
+    }()
+    time.Sleep(2 * time.Second)
+}
+
 
 
 /** MEMBUAT CHANNEL
@@ -78,4 +96,15 @@ func TestInOutChannel(t *testing.T){
  * namun jika menginginkan sebuah channel hanya bisa digunakan sebagai sebuah penerima
  * atau pengim saja bisa dengan memberi penanda pada channel tersebut ( chan <-)
  * penannda in sebagai pengirim data dan penanda out sebagai penerima ( <-chan )
+ * 
+ * CHANNEL BUFFERED
+ * Pada golang channel hanya bisa mengirim 1 data jika ingin menanmbahkan data lagi maka 
+ * data tersebut akan dimasukan dalam antrian sampai data pertama atau sebelumnya diambil
+ * Buffered berfungsi sebagai penampung data antrian
+ ** Buffer capacity
+ * Kita bebas memasukkan berapa jumlah kapasitas antrian didalam buffer
+ * jika kita set 5 maka buffer tersebut dapat menerima data sebanyak 5 data saja
+ * dan jika ingin mengirim data ke 6 maka kita harus menunggu sampai ada buffer yang kosong
+ * Untuk membuat buffer cukup menambahkannya capacitynya sebagai argumen pada function make
+ * make(chan string, 5)
  */
