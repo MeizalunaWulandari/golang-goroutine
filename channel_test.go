@@ -36,6 +36,27 @@ func TestChannelAsParameter(t *testing.T){
     fmt.Println(data)
 }
 
+func OnlyIn(channel chan <- string ){
+    time.Sleep(2 * time.Second)
+    channel <- "Meizaluna Wulandari"   
+}
+
+func OnlyOut(channel <- chan string ){
+    data := <- channel
+    fmt.Println(data)
+}
+
+func TestInOutChannel(t *testing.T){
+    channel := make(chan string)
+    defer close(channel)
+
+    go OnlyIn(channel)
+    go OnlyOut(channel)
+    time.Sleep(2 * time.Second)
+}
+
+
+
 /** MEMBUAT CHANNEL
  * Channel di golang direpresentasikan dengan tipe data chan
  * Untuk membuat channel kita bisa menggunakan function make()
@@ -51,4 +72,10 @@ func TestChannelAsParameter(t *testing.T){
  * CHANNEL SEBAGAI PARAMETER
  * Channel secara otomatis menggunakan pass by refence sehingga tidak perlu menggunakan pointer untuk
  * melakukan hal ini
+ * 
+ * CHANNEL IN DAN OUT
+ * Sebuah channel dapat digunakan sebagai pengirim maupun penerima data
+ * namun jika menginginkan sebuah channel hanya bisa digunakan sebagai sebuah penerima
+ * atau pengim saja bisa dengan memberi penanda pada channel tersebut ( chan <-)
+ * penannda in sebagai pengirim data dan penanda out sebagai penerima ( <-chan )
  */
