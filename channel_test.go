@@ -198,5 +198,12 @@ func TestDefaultSelectChannel(t *testing.T){
  * datang secara bersamaan dibeberapa channel, maka akan terpilih secara random
  * 
  * DEFAULT CHANNEL
- * Default channel digunakan ketika ingin melakukan sesuatu sebelum data masuk ke channel   
- */
+ * Default channel digunakan ketika ingin melakukan sesuatu sebelum data masuk ke channel
+ * 
+ * RACE CONDITION
+ * Saat kita menggunakan goroutine, dia tidak hanya berjalan secara concurrent, tapi juga bisa pararel juga
+ * karena bisa ada beberapa thread yang berjalan secara pareler
+ * hal ini sangat berbahaya ketika kita melakukan manipulasi data variable yang sama oleh beberapa goroutine 
+ * secara bersamaan
+ * Hal ini bisa menyebabkan masalah yang namanya Race Condition
+ */ 
