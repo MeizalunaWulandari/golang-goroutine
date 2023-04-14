@@ -21,6 +21,21 @@ func TestCreateChannel(t *testing.T){
     time.Sleep(5 * time.Second)
 }
 
+func GiveMeResponse(channel chan string){
+    time.Sleep(2 * time.Second)
+    channel <- "Meizaluna Wulandari"
+}
+
+func TestChannelAsParameter(t *testing.T){
+    channel := make(chan string)
+    defer close(channel)
+
+    go GiveMeResponse(channel)
+
+    data := <- channel
+    fmt.Println(data)
+}
+
 /** MEMBUAT CHANNEL
  * Channel di golang direpresentasikan dengan tipe data chan
  * Untuk membuat channel kita bisa menggunakan function make()
@@ -32,4 +47,8 @@ func TestCreateChannel(t *testing.T){
  * Jika selesai jangan lupa untuk menutup channel menggunakan function close()
  * Jika membuat channel pastikan ada yang mengirim dan menerima, karena jika salah satunya tidak ada 
  * maka akan terjadi error
+ * 
+ * CHANNEL SEBAGAI PARAMETER
+ * Channel secara otomatis menggunakan pass by refence sehingga tidak perlu menggunakan pointer untuk
+ * melakukan hal ini
  */
