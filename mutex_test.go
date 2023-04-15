@@ -25,6 +25,41 @@ func TestMutex(t *testing.T){
     fmt.Println("Counter = ", x)
 }
 
+type BankAccount struct{
+    RWMutex sync.RWMutex
+    Balance int
+}
+
+func (account *BankAccount) AddBalance(amount int) {
+    account.RWMutex.Lock()
+    account.Balance = account.Balance + amount
+    account.RWMutex.Unlock()
+}
+
+func (account *BankAccount) GetBalance()int{
+    account.RWMutex.RLock()
+    balance := account.Balance
+    account.RWMutex.RUnlock()
+    return balance
+}
+
+func TestRWMutex(t *testing.T){
+    account := BankAccount{}
+
+    for i := 0; i < 100; i++{
+        go func() {
+            for j := 0; j < 100; j++{
+                account.AddBalance(1)
+                fmt.Println(account.GetBalance())
+            }
+        }()
+    }
+
+    time.Sleep(5 * time.Second)
+    fmt.Println("Total Balance", account.GetBalance())
+
+}
+
 /** SYNC.MUTEX
  * Mutex(Mutual Exclusion) 
  * Untuk mengatasi masalah race condition, di golang terdapat sebuah struct bernama sync.Mutex
@@ -34,4 +69,14 @@ func TestMutex(t *testing.T){
  * diperbolehkan, setelah goroutine tersebut melakukan unlock, maka baru goroutine selanjutnya 
  * diperbolehkan melakukan lock lagi
  * Ini sangat cocok sebagai solusi ketika kita ada masalah race condition
+ * 
+ * SYNC.RWMUTEX
+ * RWMutex(Write Write Mutex)
+ * Digunakan ketika kita tidak hanya ingin melakukan locking pada proses menngubah data,
+ * tetapi juga merubah data
+ * Sebenarnya bisa menggunakan Mutex saja, namun masalahkan proses antara proses membaca dan mengubah data
+ * akan rebutan
+ * Di golang telah disediakan struct RWMutex untuk menangani hal ini, dimana mutex jenis ini memiliki dua 
+ * dua lock, lock untuk Read dan Lock untuk Write
+ * RWMutex hanya diperlukan ketika membuat data yang akan diakses oleh beberapa goroutine
  */
